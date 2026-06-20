@@ -1,1 +1,280 @@
 
+#pragma once
+
+namespace CppWinFormsProject {
+
+    using namespace System;
+    using namespace System::ComponentModel;
+    using namespace System::Collections;
+    using namespace System::Windows::Forms;
+    using namespace System::Data;
+    using namespace System::Drawing;
+
+    // Структура узла односвязного списка
+    struct Node {
+        int data;
+        Node* next;
+    };
+
+    public ref class MyForm : public System::Windows::Forms::Form
+    {
+    private:
+        // Указатель на голову списка
+        Node* head;
+
+    public:
+        MyForm(void)
+        {
+            InitializeComponent();
+            head = nullptr;
+        }
+
+    protected:
+        ~MyForm()
+        {
+            if (components)
+            {
+                delete components;
+            }
+            // Очистка памяти при закрытии формы
+            ClearList();
+        }
+
+    private: 
+        System::Windows::Forms::MenuStrip^ menuStrip1;
+        System::Windows::Forms::ToolStripMenuItem^ менюToolStripMenuItem;
+        System::Windows::Forms::ToolStripMenuItem^ создатьСписокToolStripMenuItem;
+        System::Windows::Forms::ToolStripMenuItem^ добавитьЭлементToolStripMenuItem;
+        System::Windows::Forms::ToolStripMenuItem^ удалитьЭлементToolStripMenuItem;
+        System::Windows::Forms::ToolStripMenuItem^ очиститьСписокToolStripMenuItem;
+        System::Windows::Forms::ListBox^ listBoxElements;
+        System::Windows::Forms::TextBox^ textBoxInput;
+        System::Windows::Forms::Label^ labelInput;
+
+        System::ComponentModel::Container ^components;
+
+#region Windows Form Designer generated code
+        void InitializeComponent(void)
+        {
+            this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
+            this->менюToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+            this->создатьСписокToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+            this->добавитьЭлементToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+            this->удалитьЭлементToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+            this->очиститьСписокToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+            this->listBoxElements = (gcnew System::Windows::Forms::ListBox());
+            this->textBoxInput = (gcnew System::Windows::Forms::TextBox());
+            this->labelInput = (gcnew System::Windows::Forms::Label());
+            this->menuStrip1->SuspendLayout();
+            this->SuspendLayout();
+            // 
+            // menuStrip1
+            // 
+            this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->менюToolStripMenuItem });
+            this->menuStrip1->Location = System::Drawing::Point(0, 0);
+            this->menuStrip1->Name = L"menuStrip1";
+            this->menuStrip1->Size = System::Drawing::Size(384, 24);
+            this->menuStrip1->TabIndex = 0;
+            this->menuStrip1->Text = L"menuStrip1";
+            // 
+            // менюToolStripMenuItem
+            // 
+            this->менюToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {
+                this->создатьСписокToolStripMenuItem,
+                this->добавитьЭлементToolStripMenuItem,
+                this->удалитьЭлементToolStripMenuItem,
+                this->очиститьСписокToolStripMenuItem
+            });
+            this->менюToolStripMenuItem->Name = L"менюToolStripMenuItem";
+            this->менюToolStripMenuItem->Size = System::Drawing::Size(53, 20);
+            this->менюToolStripMenuItem->Text = L"Меню";
+            // 
+            // создатьСписокToolStripMenuItem
+            // 
+            this->создатьСписокToolStripMenuItem->Name = L"создатьСписокToolStripMenuItem";
+            this->создатьСписокToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+            this->создатьСписокToolStripMenuItem->Text = L"Создать список";
+            this->создатьСписокToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::создатьСписокToolStripMenuItem_Click);
+            // 
+            // добавитьЭлементToolStripMenuItem
+            // 
+            this->добавитьЭлементToolStripMenuItem->Name = L"добавитьЭлементToolStripMenuItem";
+            this->добавитьЭлементToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+            this->добавитьЭлементToolStripMenuItem->Text = L"Добавить элемент";
+            this->добавитьЭлементToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::добавитьЭлементToolStripMenuItem_Click);
+            // 
+            // удалитьЭлементToolStripMenuItem
+            // 
+            this->удалитьЭлементToolStripMenuItem->Name = L"удалитьЭлементToolStripMenuItem";
+            this->удалитьЭлементToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+            this->удалитьЭлементToolStripMenuItem->Text = L"Удалить элемент";
+            this->удалитьЭлементToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::удалитьЭлементToolStripMenuItem_Click);
+            // 
+            // очиститьСписокToolStripMenuItem
+            // 
+            this->очиститьСписокToolStripMenuItem->Name = L"очиститьСписокToolStripMenuItem";
+            this->очиститьСписокToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+            this->очиститьСписокToolStripMenuItem->Text = L"Очистить список";
+            this->очиститьСписокToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::очиститьСписокToolStripMenuItem_Click);
+            // 
+            // listBoxElements
+            // 
+            this->listBoxElements->FormattingEnabled = true;
+            this->listBoxElements->Location = System::Drawing::Point(12, 80);
+            this->listBoxElements->Name = L"listBoxElements";
+            this->listBoxElements->Size = System::Drawing::Size(360, 264);
+            this->listBoxElements->TabIndex = 1;
+            // 
+            // textBoxInput
+            // 
+            this->textBoxInput->Location = System::Drawing::Point(150, 40);
+            this->textBoxInput->Name = L"textBoxInput";
+            this->textBoxInput->Size = System::Drawing::Size(100, 20);
+            this->textBoxInput->TabIndex = 2;
+            // 
+            // labelInput
+            // 
+            this->labelInput->AutoSize = true;
+            this->labelInput->Location = System::Drawing::Point(12, 43);
+            this->labelInput->Name = L"labelInput";
+            this->labelInput->Size = System::Drawing::Size(132, 13);
+            this->labelInput->TabIndex = 3;
+            this->labelInput->Text = L"Значение (для Дов./Уд.):";
+            // 
+            // MyForm
+            // 
+            this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+            this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+            this->ClientSize = System::Drawing::Size(384, 361);
+            this->Controls->Add(this->labelInput);
+            this->Controls->Add(this->textBoxInput);
+            this->Controls->Add(this->listBoxElements);
+            this->Controls->Add(this->menuStrip1);
+            this->MainMenuStrip = this->menuStrip1;
+            this->Name = L"MyForm";
+            this->Text = L"Односвязный список C++/CLI";
+            this->menuStrip1->ResumeLayout(false);
+            this->menuStrip1->PerformLayout();
+            this->ResumeLayout(false);
+            this->PerformLayout();
+        }
+#endregion
+
+        // Функция обновления ListBox на основе текущего состояния списка
+        void UpdateListBox()
+        {
+            listBoxElements->Items->Clear();
+            Node* current = head;
+            while (current != nullptr)
+            {
+                listBoxElements->Items->Add(current->data);
+                current = current->next;
+            }
+        }
+
+        // Вспомогательная функция полной очистки списка (без return)
+        void ClearList()
+        {
+            while (head != nullptr)
+            {
+                Node* temp = head;
+                head = head->next;
+                delete temp;
+            }
+        }
+
+        // 1. Создание списка
+        System::Void создатьСписокToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)
+        {
+            ClearList();
+            head = nullptr;
+            
+            // Создаем начальный элемент со значением 0 (или из текстового поля, если введено)
+            int value = 0;
+            Int32::TryParse(textBoxInput->Text, value);
+
+            head = new Node();
+            head->data = value;
+            head->next = nullptr;
+
+            UpdateListBox();
+        }
+
+        // 2. Добавление элемента в конец списка
+        System::Void добавитьЭлементToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)
+        {
+            int value = 0;
+            if (Int32::TryParse(textBoxInput->Text, value))
+            {
+                Node* newNode = new Node();
+                newNode->data = value;
+                newNode->next = nullptr;
+
+                if (head == nullptr)
+                {
+                    head = newNode;
+                }
+                else
+                {
+                    Node* current = head;
+                    while (current->next != nullptr)
+                    {
+                        current = current->next;
+                    }
+                    current->next = newNode;
+                }
+                UpdateListBox();
+            }
+            else
+            {
+                MessageBox::Show("Пожалуйста, введите корректное целое число.", "Ошибка ввода");
+            }
+        }
+
+        // 3. Удаление элемента по значению (первого найденного)
+        System::Void удалитьЭлементToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)
+        {
+            int value = 0;
+            if (Int32::TryParse(textBoxInput->Text, value) && head != nullptr)
+            {
+                // Случай 1: Удаляемый элемент — это голова списка
+                if (head->data == value)
+                {
+                    Node* temp = head;
+                    head = head->next;
+                    delete temp;
+                }
+                else
+                {
+                    // Случай 2: Элемент находится дальше в списке
+                    Node* current = head;
+                    bool found = false;
+
+                    // Идем по списку, пока не дойдем до конца или пока не найдем элемент
+                    while (current->next != nullptr && !found)
+                    {
+                        if (current->next->data == value)
+                        {
+                            Node* temp = current->next;
+                            current->next = current->next->next;
+                            delete temp;
+                            found = true; // Выставляем флаг, чтобы завершить цикл без break
+                        }
+                        else
+                        {
+                            current = current->next;
+                        }
+                    }
+                }
+                UpdateListBox();
+            }
+        }
+
+        // 4. Очистка списка
+        System::Void очиститьСписокToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)
+        {
+            ClearList();
+            UpdateListBox();
+        }
+    };
+}
