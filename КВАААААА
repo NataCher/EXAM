@@ -1,0 +1,13 @@
+void UpdateListBox()
+{
+    // ВАЖНО: Сначала полностью очищаем визуальный список на форме
+    listBoxElements->Items->Clear(); 
+
+    Node* current = head;
+    // Бежим по нашему связанному списку и добавляем элементы заново
+    while (current != nullptr)
+    {
+        listBoxElements->Items->Add(current->data);
+        current = current->next;
+    }
+}
