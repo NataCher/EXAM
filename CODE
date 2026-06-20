@@ -1,280 +1,245 @@
-
+Александр:
 #pragma once
 
-namespace CppWinFormsProject {
+namespace CppWinFormsCalculator {
 
-    using namespace System;
-    using namespace System::ComponentModel;
-    using namespace System::Collections;
-    using namespace System::Windows::Forms;
-    using namespace System::Data;
-    using namespace System::Drawing;
+ using namespace System;
+ using namespace System::ComponentModel;
+ using namespace System::Collections;
+ using namespace System::Windows::Forms;
+ using namespace System::Data;
+ using namespace System::Drawing;
 
-    // Структура узла односвязного списка
-    struct Node {
-        int data;
-        Node* next;
-    };
+ public ref class MyForm : public System::Windows::Forms::Form
+ {
+ public:
+  MyForm(void)
+  {
+   InitializeComponent();
+  }
 
-    public ref class MyForm : public System::Windows::Forms::Form
-    {
-    private:
-        // Указатель на голову списка
-        Node* head;
+ protected:
+  ~MyForm()
+  {
+   if (components)
+   {
+    delete components;
+   }
+  }
 
-    public:
-        MyForm(void)
-        {
-            InitializeComponent();
-            head = nullptr;
-        }
+ private:
+  // Переменные для логики калькулятора
+  double firstNum = 0;
+  double secondNum = 0;
+  double result = 0;
+  char operation = ' ';
+  bool isOpPressed = false;
 
-    protected:
-        ~MyForm()
-        {
-            if (components)
-            {
-                delete components;
-            }
-            // Очистка памяти при закрытии формы
-            ClearList();
-        }
+ private: System::Windows::Forms::TextBox^ txtDisplay;
+ private: System::Windows::Forms::Button^ btn7;
+ private: System::Windows::Forms::Button^ btn8;
+ private: System::Windows::Forms::Button^ btn9;
+ private: System::Windows::Forms::Button^ btnAdd;
+ private: System::Windows::Forms::Button^ btnSub;
+ private: System::Windows::Forms::Button^ btnEqual;
+ private: System::Windows::Forms::Button^ btnClear;
+ private: System::Windows::Forms::Button^ btn0;
 
-    private: 
-        System::Windows::Forms::MenuStrip^ menuStrip1;
-        System::Windows::Forms::ToolStripMenuItem^ менюToolStripMenuItem;
-        System::Windows::Forms::ToolStripMenuItem^ создатьСписокToolStripMenuItem;
-        System::Windows::Forms::ToolStripMenuItem^ добавитьЭлементToolStripMenuItem;
-        System::Windows::Forms::ToolStripMenuItem^ удалитьЭлементToolStripMenuItem;
-        System::Windows::Forms::ToolStripMenuItem^ очиститьСписокToolStripMenuItem;
-        System::Windows::Forms::ListBox^ listBoxElements;
-        System::Windows::Forms::TextBox^ textBoxInput;
-        System::Windows::Forms::Label^ labelInput;
-
-        System::ComponentModel::Container ^components;
+ private:
+  System::ComponentModel::Container ^components;
 
 #region Windows Form Designer generated code
-        void InitializeComponent(void)
-        {
-            this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
-            this->менюToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-            this->создатьСписокToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-            this->добавитьЭлементToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-            this->удалитьЭлементToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-            this->очиститьСписокToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-            this->listBoxElements = (gcnew System::Windows::Forms::ListBox());
-            this->textBoxInput = (gcnew System::Windows::Forms::TextBox());
-            this->labelInput = (gcnew System::Windows::Forms::Label());
-            this->menuStrip1->SuspendLayout();
-            this->SuspendLayout();
-            // 
-            // menuStrip1
-            // 
-            this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->менюToolStripMenuItem });
-            this->menuStrip1->Location = System::Drawing::Point(0, 0);
-            this->menuStrip1->Name = L"menuStrip1";
-            this->menuStrip1->Size = System::Drawing::Size(384, 24);
-            this->menuStrip1->TabIndex = 0;
-            this->menuStrip1->Text = L"menuStrip1";
-            // 
-            // менюToolStripMenuItem
-            // 
-            this->менюToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {
-                this->создатьСписокToolStripMenuItem,
-                this->добавитьЭлементToolStripMenuItem,
-                this->удалитьЭлементToolStripMenuItem,
-                this->очиститьСписокToolStripMenuItem
-            });
-            this->менюToolStripMenuItem->Name = L"менюToolStripMenuItem";
-            this->менюToolStripMenuItem->Size = System::Drawing::Size(53, 20);
-            this->менюToolStripMenuItem->Text = L"Меню";
-            // 
-            // создатьСписокToolStripMenuItem
-            // 
-            this->создатьСписокToolStripMenuItem->Name = L"создатьСписокToolStripMenuItem";
-            this->создатьСписокToolStripMenuItem->Size = System::Drawing::Size(180, 22);
-            this->создатьСписокToolStripMenuItem->Text = L"Создать список";
-            this->создатьСписокToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::создатьСписокToolStripMenuItem_Click);
-            // 
-            // добавитьЭлементToolStripMenuItem
-            // 
-            this->добавитьЭлементToolStripMenuItem->Name = L"добавитьЭлементToolStripMenuItem";
-            this->добавитьЭлементToolStripMenuItem->Size = System::Drawing::Size(180, 22);
-            this->добавитьЭлементToolStripMenuItem->Text = L"Добавить элемент";
-            this->добавитьЭлементToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::добавитьЭлементToolStripMenuItem_Click);
-            // 
-            // удалитьЭлементToolStripMenuItem
-            // 
-            this->удалитьЭлементToolStripMenuItem->Name = L"удалитьЭлементToolStripMenuItem";
-            this->удалитьЭлементToolStripMenuItem->Size = System::Drawing::Size(180, 22);
-            this->удалитьЭлементToolStripMenuItem->Text = L"Удалить элемент";
-            this->удалитьЭлементToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::удалитьЭлементToolStripMenuItem_Click);
-            // 
-            // очиститьСписокToolStripMenuItem
-            // 
-            this->очиститьСписокToolStripMenuItem->Name = L"очиститьСписокToolStripMenuItem";
-            this->очиститьСписокToolStripMenuItem->Size = System::Drawing::Size(180, 22);
-            this->очиститьСписокToolStripMenuItem->Text = L"Очистить список";
-            this->очиститьСписокToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::очиститьСписокToolStripMenuItem_Click);
-            // 
-            // listBoxElements
-            // 
-            this->listBoxElements->FormattingEnabled = true;
-            this->listBoxElements->Location = System::Drawing::Point(12, 80);
-            this->listBoxElements->Name = L"listBoxElements";
-            this->listBoxElements->Size = System::Drawing::Size(360, 264);
-            this->listBoxElements->TabIndex = 1;
-            // 
-            // textBoxInput
-            // 
-            this->textBoxInput->Location = System::Drawing::Point(150, 40);
-            this->textBoxInput->Name = L"textBoxInput";
-            this->textBoxInput->Size = System::Drawing::Size(100, 20);
-            this->textBoxInput->TabIndex = 2;
-            // 
-            // labelInput
-            // 
-            this->labelInput->AutoSize = true;
-            this->labelInput->Location = System::Drawing::Point(12, 43);
-            this->labelInput->Name = L"labelInput";
-            this->labelInput->Size = System::Drawing::Size(132, 13);
-            this->labelInput->TabIndex = 3;
-            this->labelInput->Text = L"Значение (для Дов./Уд.):";
-            // 
-            // MyForm
-            // 
-            this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
-            this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-            this->ClientSize = System::Drawing::Size(384, 361);
-            this->Controls->Add(this->labelInput);
-            this->Controls->Add(this->textBoxInput);
-            this->Controls->Add(this->listBoxElements);
-            this->Controls->Add(this->menuStrip1);
-            this->MainMenuStrip = this->menuStrip1;
-            this->Name = L"MyForm";
-            this->Text = L"Односвязный список C++/CLI";
-            this->menuStrip1->ResumeLayout(false);
-            this->menuStrip1->PerformLayout();
-            this->ResumeLayout(false);
-            this->PerformLayout();
-        }
+  void InitializeComponent(void)
+  {
+   this->txtDisplay = (gcnew System::Windows::Forms::TextBox());
+   this->btn7 = (gcnew System::Windows::Forms::Button());
+   this->btn8 = (gcnew System::Windows::Forms::Button());
+   this->btn9 = (gcnew System::Windows::Forms::Button());
+   this->btnAdd = (gcnew System::Windows::Forms::Button());
+   this->btnSub = (gcnew System::Windows::Forms::Button());
+   this->btnEqual = (gcnew System::Windows::Forms::Button());
+   this->btnClear = (gcnew System::Windows::Forms::Button());
+   this->btn0 = (gcnew System::Windows::Forms::Button());
+   this->SuspendLayout();
+   // 
+   // txtDisplay
+   // 
+   this->txtDisplay->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 16, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
+   this->txtDisplay->Location = System::Drawing::Point(12, 12);
+   this->txtDisplay->Name = L"txtDisplay";
+   this->txtDisplay->ReadOnly = true;
+   this->txtDisplay->Size = System::Drawing::Size(260, 38);
+   this->txtDisplay->TabIndex = 0;
+   this->txtDisplay->Text = L"0";
+   this->txtDisplay->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
+   // 
+   // btn7
+   // 
+   this->btn7->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14));
+   this->btn7->Location = System::Drawing::Point(12, 65);
+   this->btn7->Name = L"btn7";
+   this->btn7->Size = System::Drawing::Size(60, 50);
+   this->btn7->TabIndex = 1;
+   this->btn7->Text = L"7";
+   this->btn7->UseVisualStyleBackColor = true;
+   this->btn7->Click += gcnew System::EventHandler(this, &MyForm::Digit_Click);
+   // 
+   // btn8
+   // 
+   this->btn8->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14));
+   this->btn8->Location = System::Drawing::Point(78, 65);
+   this->btn8->Name = L"btn8";
+   this->btn8->Size = System::Drawing::Size(60, 50);
+   this->btn8->TabIndex = 2;
+   this->btn8->Text = L"8";
+   this->btn8->UseVisualStyleBackColor = true;
+   this->btn8->Click += gcnew System::EventHandler(this, &MyForm::Digit_Click);
+   // 
+   // btn9
+   // 
+   this->btn9->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14));
+   this->btn9->Location = System::Drawing::Point(144, 65);
+   this->btn9->Name = L"btn9";
+   this->btn9->Size = System::Drawing::Size(60, 50);
+   this->btn9->TabIndex = 3;
+   this->btn9->Text = L"9";
+   this->btn9->UseVisualStyleBackColor = true;
+   this->btn9->Click += gcnew System::EventHandler(this, &MyForm::Digit_Click);
+   // 
+   // btnAdd
+   // 
+   this->btnAdd->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14));
+
+this->btnAdd->Location = System::Drawing::Point(212, 65);
+   this->btnAdd->Name = L"btnAdd";
+   this->btnAdd->Size = System::Drawing::Size(60, 50);
+   this->btnAdd->TabIndex = 4;
+   this->btnAdd->Text = L"+";
+   this->btnAdd->UseVisualStyleBackColor = true;
+   this->btnAdd->Click += gcnew System::EventHandler(this, &MyForm::btnAdd_Click);
+   // 
+   // btnSub
+   // 
+   this->btnSub->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14));
+   this->btnSub->Location = System::Drawing::Point(212, 121);
+   this->btnSub->Name = L"btnSub";
+   this->btnSub->Size = System::Drawing::Size(60, 50);
+   this->btnSub->TabIndex = 5;
+   this->btnSub->Text = L"-";
+   this->btnSub->UseVisualStyleBackColor = true;
+   this->btnSub->Click += gcnew System::EventHandler(this, &MyForm::btnSub_Click);
+   // 
+   // btnEqual
+   // 
+   this->btnEqual->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14));
+   this->btnEqual->Location = System::Drawing::Point(144, 121);
+   this->btnEqual->Name = L"btnEqual";
+   this->btnEqual->Size = System::Drawing::Size(60, 50);
+   this->btnEqual->TabIndex = 6;
+   this->btnEqual->Text = L"=";
+   this->btnEqual->UseVisualStyleBackColor = true;
+   this->btnEqual->Click += gcnew System::EventHandler(this, &MyForm::btnEqual_Click);
+   // 
+   // btnClear
+   // 
+   this->btnClear->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14));
+   this->btnClear->Location = System::Drawing::Point(12, 121);
+   this->btnClear->Name = L"btnClear";
+   this->btnClear->Size = System::Drawing::Size(60, 50);
+   this->btnClear->TabIndex = 7;
+   this->btnClear->Text = L"C";
+   this->btnClear->UseVisualStyleBackColor = true;
+   this->btnClear->Click += gcnew System::EventHandler(this, &MyForm::btnClear_Click);
+   // 
+   // btn0
+   // 
+   this->btn0->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14));
+   this->btn0->Location = System::Drawing::Point(78, 121);
+   this->btn0->Name = L"btn0";
+   this->btn0->Size = System::Drawing::Size(60, 50);
+   this->btn0->TabIndex = 8;
+   this->btn0->Text = L"0";
+   this->btn0->UseVisualStyleBackColor = true;
+   this->btn0->Click += gcnew System::EventHandler(this, &MyForm::Digit_Click);
+   // 
+   // MyForm
+   // 
+   this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
+   this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+   this->ClientSize = System::Drawing::Size(284, 186);
+   this->Controls->->Add(this->btn0);
+   this->Controls->->Add(this->btnClear);
+   this->Controls->->Add(this->btnEqual);
+   this->Controls->->Add(this->btnSub);
+   this->Controls->->Add(this->btnAdd);
+   this->Controls->->Add(this->btn9);
+   this->Controls->->Add(this->btn8);
+   this->Controls->->Add(this->btn7);
+   this->Controls->->Add(this->txtDisplay);
+   this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+   this->MaximizeBox = false;
+   this->Name = L"MyForm";
+   this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
+   this->Text = L"Калькулятор";
+   this->ResumeLayout(false);
+   this->PerformLayout();
+
+  }
 #endregion
 
-        // Функция обновления ListBox на основе текущего состояния списка
-        void UpdateListBox()
-        {
-            listBoxElements->Items->Clear();
-            Node* current = head;
-            while (current != nullptr)
-            {
-                listBoxElements->Items->Add(current->data);
-                current = current->next;
-            }
-        }
+ // Единый обработчик для всех цифровых кнопок
+ private: System::Void Digit_Click(System::Object^ sender, System::EventArgs^ e) {
+  Button^ btn = safe_cast<Button^>(sender);
 
-        // Вспомогательная функция полной очистки списка (без return)
-        void ClearList()
-        {
-            while (head != nullptr)
-            {
-                Node* temp = head;
-                head = head->next;
-                delete temp;
-            }
-        }
+  if (txtDisplay->Text == "0" || isOpPressed) {
+   txtDisplay->Text = btn->Text;
+   isOpPressed = false;
+  } else {
+   txtDisplay->Text += btn->Text;
+  }
+ }
 
-        // 1. Создание списка
-        System::Void создатьСписокToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)
-        {
-            ClearList();
-            head = nullptr;
-            
-            // Создаем начальный элемент со значением 0 (или из текстового поля, если введено)
-            int value = 0;
-            Int32::TryParse(textBoxInput->Text, value);
+ // Кнопка Сложение (+)
+ private: System::Void btnAdd_Click(System::Object^ sender, System::EventArgs^ e) {
+  firstNum = System::Convert::ToDouble(txtDisplay->Text);
+  operation = '+';
+  isOpPressed = true;
+ }
 
-            head = new Node();
-            head->data = value;
-            head->next = nullptr;
+ // Кнопка Вычитание (-)
+ private: System::Void btnSub_Click(System::Object^ sender, System::EventArgs^ e) {
+  firstNum = System::Convert::ToDouble(txtDisplay->Text);
+  operation = '-';
+  isOpPressed = true;
+ }
 
-            UpdateListBox();
-        }
+ // Кнопка Равно (=)
+ private: System::Void btnEqual_Click(System::Object^ sender, System::EventArgs^ e) {
+  secondNum = System::Convert::ToDouble(txtDisplay->Text);
 
-        // 2. Добавление элемента в конец списка
-        System::Void добавитьЭлементToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)
-        {
-            int value = 0;
-            if (Int32::TryParse(textBoxInput->Text, value))
-            {
-                Node* newNode = new Node();
-                newNode->data = value;
-                newNode->next = nullptr;
+switch (operation) {
+   case '+':
+    result = firstNum + secondNum;
+    break;
+   case '-':
+    result = firstNum - secondNum;
+    break;
+   default:
+    return;
+  }
 
-                if (head == nullptr)
-                {
-                    head = newNode;
-                }
-                else
-                {
-                    Node* current = head;
-                    while (current->next != nullptr)
-                    {
-                        current = current->next;
-                    }
-                    current->next = newNode;
-                }
-                UpdateListBox();
-            }
-            else
-            {
-                MessageBox::Show("Пожалуйста, введите корректное целое число.", "Ошибка ввода");
-            }
-        }
+  txtDisplay->Text = System::Convert::ToString(result);
+  isOpPressed = true; 
+ }
 
-        // 3. Удаление элемента по значению (первого найденного)
-        System::Void удалитьЭлементToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)
-        {
-            int value = 0;
-            if (Int32::TryParse(textBoxInput->Text, value) && head != nullptr)
-            {
-                // Случай 1: Удаляемый элемент — это голова списка
-                if (head->data == value)
-                {
-                    Node* temp = head;
-                    head = head->next;
-                    delete temp;
-                }
-                else
-                {
-                    // Случай 2: Элемент находится дальше в списке
-                    Node* current = head;
-                    bool found = false;
-
-                    // Идем по списку, пока не дойдем до конца или пока не найдем элемент
-                    while (current->next != nullptr && !found)
-                    {
-                        if (current->next->data == value)
-                        {
-                            Node* temp = current->next;
-                            current->next = current->next->next;
-                            delete temp;
-                            found = true; // Выставляем флаг, чтобы завершить цикл без break
-                        }
-                        else
-                        {
-                            current = current->next;
-                        }
-                    }
-                }
-                UpdateListBox();
-            }
-        }
-
-        // 4. Очистка списка
-        System::Void очиститьСписокToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)
-        {
-            ClearList();
-            UpdateListBox();
-        }
-    };
+ // Кнопка Очистить (C)
+ private: System::Void btnClear_Click(System::Object^ sender, System::EventArgs^ e) {
+  txtDisplay->Text = "0";
+  firstNum = 0;
+  secondNum = 0;
+  result = 0;
+  operation = ' ';
+  isOpPressed = false;
+ }
+};
 }
