@@ -1,0 +1,42 @@
+System::Void удалитьЭлементToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)
+{
+    int value = 0;
+    
+    // Проверяем, что введено число и список вообще существует (не пуст)
+    if (Int32::TryParse(textBoxInput->Text, value) && head != nullptr)
+    {
+        // СЛУЧАЙ 1: Удаляемый элемент находится в самом начале (голова списка)
+        if (head->data == value)
+        {
+            Node* temp = head;
+            head = head->next; // Сдвигаем голову на следующий элемент
+            delete temp;       // Освобождаем память
+        }
+        else
+        {
+            // СЛУЧАЙ 2: Элемент находится где-то дальше (в середине или в конце)
+            Node* current = head;
+            bool found = false;
+
+            // Идем по списку, проверяя СЛЕДУЮЩИЙ элемент (current->next)
+            while (current->next != nullptr && !found)
+            {
+                if (current->next->data == value)
+                {
+                    Node* temp = current->next;       // Запоминаем узел, который удаляем
+                    current->next = current->next->next; // «Перешагиваем» через него
+                    delete temp;                      // Освобождаем память
+                    
+                    found = true; // Устанавливаем флаг, чтобы цикл завершился сам (без break)
+                }
+                else
+                {
+                    current = current->next; // Идем дальше, только если не нашли
+                }
+            }
+        }
+        
+        // Обновляем визуальный список на форме
+        UpdateListBox();
+    }
+}
